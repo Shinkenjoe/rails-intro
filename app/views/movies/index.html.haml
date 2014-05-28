@@ -6,7 +6,11 @@
     = rating
     = check_box_tag "ratings[#{rating}]", value="1",
     session[:checked].include?(rating)
+<<<<<<< HEAD
   = submit_tag 'Refresh', id: "ratings_submit"
+=======
+  = submit_tag 'Refresh', id: "rating_submit"
+>>>>>>> 7b40d3a64d06064274f9271bcf11ad3a86d0a7a4
 
 %table#movies
   %thead
