@@ -6,14 +6,18 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+
   def index
-    @movies = Movie.all
-    if params[:sort] == "title"
-      @movies = Movie.order(:title)
-      flash[:sort_hilite] = :title
-    elsif params[:sort] == "release_date"
-      @movies = Movie.order(:release_date)
-      flash[:sort_hilite] = :release_date
+    @all_ratings = Movie.select(:rating).map(&:rating).uniq
+    if params[:ratings]
+      @checked = []
+      params[:ratings].each_key {|rating| @checked.push (rating)}
+    end
+    @checked ||=  @all_ratings
+    @movies = Movie.where(rating: @checked)
+    if params[:sort]
+      @movies = Movie.order params[:sort]
+      @hilite = params[:sort]
     end
   end
 
