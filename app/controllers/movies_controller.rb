@@ -9,15 +9,22 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.select(:rating).map(&:rating).uniq
+    session[:checked] ||=  @all_ratings
+    session[:sort] ||= "title"
     if params[:ratings]
-      @checked = []
-      params[:ratings].each_key {|rating| @checked.push (rating)}
+      session[:checked] = []
+      params[:ratings].each_key {|rating| session[:checked].push (rating)}
     end
-    @checked ||=  @all_ratings
-    @movies = Movie.where(rating: @checked)
     if params[:sort]
-      @movies = Movie.order params[:sort]
-      @hilite = params[:sort]
+      session[:sort] = params[:sort]
+    end
+    @hilite = session[:sort]
+    @movies = Movie.where(rating: session[:checked]).order(session[:sort])
+    unless params[:ratings] and params[:sort]
+      temp_hash = {sort:  session[:sort]}
+      session[:checked].each {|rating| temp_hash["ratings[#{rating}]"] = "1"}
+      flash.keep
+      redirect_to movies_path(temp_hash)
     end
   end
 

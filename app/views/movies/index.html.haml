@@ -4,8 +4,9 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]", value="1",  @checked.include?(rating)
-  = submit_tag 'Refresh', id: "rating_submit"
+    = check_box_tag "ratings[#{rating}]", value="1",
+    session[:checked].include?(rating)
+  = submit_tag 'Refresh', id: "ratings_submit"
 
 %table#movies
   %thead
